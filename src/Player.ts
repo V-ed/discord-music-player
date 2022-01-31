@@ -127,7 +127,9 @@ export class Player extends EventEmitter {
 
         if (!newState.channelId && this.client.user?.id === oldState.member?.id) {
             queue.leave();
-            return void this.emit('clientDisconnect', queue);
+            this.emit('clientDisconnect', queue);
+            this.deleteQueue(queue.guild.id);
+            return;
         } else if(deafenOnJoin && oldState.serverDeaf && !newState.serverDeaf) {
             this.emit('clientUndeafen', queue);
         }

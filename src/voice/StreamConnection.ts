@@ -186,7 +186,9 @@ export class StreamConnection extends EventEmitter {
      */
     leave() {
         this.player.stop(true);
-        this.connection.destroy();
+        try {
+            this.connection.destroy();
+        } catch (error) {}
     }
 
     /**

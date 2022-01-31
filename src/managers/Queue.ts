@@ -495,7 +495,7 @@ export class Queue {
     leave(): void {
         this.destroyed = true;
         this.connection?.leave();
-        this.player.deleteQueue(this.guild.id);
+        // this.player.deleteQueue(this.guild.id);
     }
 
 }
