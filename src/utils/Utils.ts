@@ -183,9 +183,12 @@ export class Utils {
             let VideoID = this.parseVideo(Search);
             if (!VideoID) throw DMPErrors.SEARCH_NULL;
             YouTube = new Client({
-                requestOptions: {
-                    localAddress: SOptions.localAddress
-                }
+                // fetchOptions: {
+                //     localAddress: SOptions.localAddress
+                // },
+                // requestOptions: {
+                //     localAddress: SOptions.localAddress
+                // }
             });
             let VideoResult = await YouTube.getVideo(VideoID) as IVideo;
             if(!VideoResult) throw DMPErrors.SEARCH_NULL;
@@ -342,14 +345,17 @@ export class Utils {
                 throw DMPErrors.INVALID_PLAYLIST;
 
             YouTube = new Client({
-                requestOptions: {
-                    localAddress: SOptions.localAddress
-                }
+                // fetchOptions: {
+                //     localAddress: SOptions.localAddress
+                // },
+                // requestOptions: {
+                //     localAddress: SOptions.localAddress
+                // }
             });
             let YouTubeResultData = await YouTube.getPlaylist(PlaylistID);
             if (!YouTubeResultData || Object.keys(YouTubeResultData).length === 0)
                 throw DMPErrors.INVALID_PLAYLIST;
-
+                
             let YouTubeResult: RawPlaylist = {
                 name: YouTubeResultData.title,
                 author: YouTubeResultData instanceof IPlaylist ? YouTubeResultData.channel?.name ?? 'YouTube Mix' : 'YouTube Mix',
@@ -359,9 +365,11 @@ export class Utils {
             }
 
             if(YouTubeResultData instanceof IPlaylist && YouTubeResultData.videoCount > 100 && (Limit === -1 || Limit > 100))
-                await YouTubeResultData.next(Math.floor((Limit === -1 || Limit > YouTubeResultData.videoCount ? YouTubeResultData.videoCount : Limit - 1) / 100));
+                await YouTubeResultData.videos.next(Math.floor((Limit === -1 || Limit > YouTubeResultData.videoCount ? YouTubeResultData.videoCount : Limit - 1) / 100));
+                
+            const videos = YouTubeResultData instanceof IPlaylist ? YouTubeResultData.videos.items : YouTubeResultData.videos;
 
-            YouTubeResult.songs = YouTubeResultData.videos.map((video: VideoCompact, index: number) => {
+            YouTubeResult.songs = videos.map((video, index) => {
                 if (Limit !== -1 && index >= Limit)
                     return null;
                 let song = new Song({

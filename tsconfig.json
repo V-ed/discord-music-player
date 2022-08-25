@@ -9,9 +9,17 @@
     "strict": true,
     "esModuleInterop": true,
     "pretty": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "typeRoots": [
+      "types",
+      "node_modules/@types"
+    ]
   },
   "include": [
     "src/**/*"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules"
   ]
 }

@@ -42,7 +42,7 @@
     "htmlparser2": "^7.1.2",
     "libsodium-wrappers": "^0.7.9",
     "spotify-url-info": "^2.2.3",
-    "youtubei": "^0.0.1-rc.34",
+    "youtubei": "^1.0.0-rc.5",
     "ytsr": "^3.5.3"
   },
   "devDependencies": {
