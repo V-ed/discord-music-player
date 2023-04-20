@@ -14,7 +14,7 @@ import fetch from 'isomorphic-unfetch';
 import YTSR, {Video} from 'ytsr';
 import Spotify from "spotify-url-info";
 import {getPlaylist, getSong} from "apple-music-metadata";
-import {Client, Playlist as IPlaylist, Video as IVideo, VideoCompact} from "youtubei";
+import {Client, Playlist as IPlaylist, Video as IVideo, MixPlaylist, VideoCompact} from "youtubei";
 import {ChannelType, GuildChannel} from "discord.js";
 
 let YouTube = new Client();
@@ -192,7 +192,7 @@ export class Utils {
             let VideoID = this.parseVideo(Search);
             if (!VideoID) throw DMPErrors.SEARCH_NULL;
             YouTube = new Client({
-                requestOptions: {
+                youtubeClientOptions: {
                     localAddress: SOptions.localAddress
                 }
             });
@@ -351,7 +351,7 @@ export class Utils {
                 throw DMPErrors.INVALID_PLAYLIST;
 
             YouTube = new Client({
-                requestOptions: {
+                youtubeClientOptions: {
                     localAddress: SOptions.localAddress
                 }
             });
@@ -368,9 +368,16 @@ export class Utils {
             }
 
             if (YouTubeResultData instanceof IPlaylist && YouTubeResultData.videoCount > 100 && (Limit === -1 || Limit > 100))
-                await YouTubeResultData.next(Math.floor((Limit === -1 || Limit > YouTubeResultData.videoCount ? YouTubeResultData.videoCount : Limit - 1) / 100));
+            await YouTubeResultData.videos.next(Math.floor((Limit === -1 || Limit > YouTubeResultData.videoCount ? YouTubeResultData.videoCount : Limit - 1) / 100));
 
-            YouTubeResult.songs = YouTubeResultData.videos.map((video: VideoCompact, index: number) => {
+            let items = [];
+            if (YouTubeResultData instanceof MixPlaylist) {
+                items = YouTubeResultData.videos;
+            } else if (YouTubeResultData instanceof IPlaylist) {
+                items = YouTubeResultData.videos.items;
+            }
+
+            YouTubeResult.songs = items.map((video: VideoCompact, index: number) => {
                 if (Limit !== -1 && index >= Limit)
                     return null;
                 let song = new Song({

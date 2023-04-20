@@ -45,7 +45,7 @@
     "isomorphic-unfetch": "^3.1.0",
     "libsodium-wrappers": "^0.7.9",
     "spotify-url-info": "^3.1.7",
-    "youtubei": "^0.0.1-rc.34",
+    "youtubei": "^1.1.2",
     "ytsr": "^3.6.0"
   },
   "devDependencies": {
